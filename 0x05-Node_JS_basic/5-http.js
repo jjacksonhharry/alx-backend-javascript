@@ -4,7 +4,7 @@ const { readFile } = require('fs');
 const host = '127.0.0.1';
 const port = 1245;
 
-function countStudents(path) {
+function countStudents (path) {
   try {
     console.log('After!');
     const data = fs.readFileSync(path, 'utf-8');
@@ -24,7 +24,7 @@ function countStudents(path) {
       } else {
         students[field] = {
           count: 1,
-          list: [firstName],
+          list: [firstName]
         };
       }
     }

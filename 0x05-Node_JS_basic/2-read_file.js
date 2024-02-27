@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 
-function countStudents(path) {
+function countStudents (path) {
   try {
     console.log('After!');
     const data = fs.readFileSync(path, 'utf-8');
@@ -22,7 +22,7 @@ function countStudents(path) {
       } else {
         students[field] = {
           count: 1,
-          list: [firstName],
+          list: [firstName]
         };
       }
     }

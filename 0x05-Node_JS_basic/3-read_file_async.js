@@ -1,6 +1,6 @@
 const fs = require('fs').promises;
 
-async function countStudents(path) {
+async function countStudents (path) {
   try {
     const data = await fs.readFile(path, 'utf-8');
     const lines = data.trim().split('\n');
@@ -19,7 +19,7 @@ async function countStudents(path) {
       } else {
         students[field] = {
           count: 1,
-          list: [firstName],
+          list: [firstName]
         };
       }
     }
