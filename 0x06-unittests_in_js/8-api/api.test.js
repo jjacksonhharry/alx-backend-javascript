@@ -1,40 +1,45 @@
-// api.test.js
+/* global describe, before, after, it */
 
-const { expect } = require('chai');
 const request = require('request');
-const app = require('./api');
+const { expect } = require('chai');
 
-const baseUrl = 'http://localhost:7865';
-
-describe('Index page', function () {
+describe('Index page', () => {
   let server;
 
-  before(function (done) {
-    server = app.listen(7865, function () {
-      console.log(`API available on localhost port 7865`);
-      done();
-    });
+  before((done) => {
+    server = require('./api');
+    done();
   });
 
-  after(function () {
+  after((done) => {
     server.close();
+    done();
   });
 
-  it('Correct status code?', function (done) {
-    request.get(baseUrl, function (error, response, body) {
+  it('Correct status code?', (done) => {
+    request('http://localhost:7865', (error, response, body) => {
+      if (error) {
+        done(error);
+        return;
+      }
       expect(response.statusCode).to.equal(200);
       done();
     });
   });
 
-  it('Correct result?', function (done) {
-    request.get(baseUrl, function (error, response, body) {
+  it('Correct result?', (done) => {
+    request('http://localhost:7865', (error, response, body) => {
+      if (error) {
+        done(error);
+        return;
+      }
       expect(body).to.equal('Welcome to the payment system');
       done();
     });
   });
 
-  it('Other?', function (done) {
+  it('Other?', (done) => {
+    // Add other tests as needed
     done();
   });
 });
