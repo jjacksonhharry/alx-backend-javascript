@@ -1,0 +1,16 @@
+{
+
+  "scripts": {
+
+    "test": "node ./node_modules/mocha/bin/mocha"
+
+  },
+
+  "dependencies": {
+
+    "mocha": "^10.3.0"
+
+  }
+
+}
+
