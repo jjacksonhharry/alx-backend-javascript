@@ -22,5 +22,4 @@ describe('calculateNumber', function() {
     expect(calculateNumber('DIVIDE', 1.4, 0)).to.equal('Error');
   });
 
-  // Add more test cases if needed
 });
