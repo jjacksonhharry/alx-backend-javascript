@@ -1,65 +1,72 @@
+// Create a more complex HTTP server using Node's HTTP module
+
 const http = require('http');
 const { readFile } = require('fs');
 
-const host = '127.0.0.1';
 const port = 1245;
 
-function countStudents (path) {
-  try {
-    console.log('After!');
-    const data = fs.readFileSync(path, 'utf-8');
-    const lines = data.trim().split('\n');
-
-    if (lines.length === 0) {
-      throw new Error('Cannot load the database');
-    }
-
-    const students = {};
-    for (const line of lines.slice(1)) { // Skip the header line
-      const [firstName, lastName, age, field] = line.split(',').map((field) => field.trim());
-
-      if (field in students) {
-        students[field].count++;
-        students[field].list.push(firstName);
+function countStudents (fileName) {
+  const students = {};
+  const fields = {};
+  let length = 0;
+  return new Promise((resolve, reject) => {
+    readFile(fileName, (err, data) => {
+      if (err) {
+        reject(new Error(`Error reading file: ${err.message}`));
       } else {
-        students[field] = {
-          count: 1,
-          list: [firstName]
-        };
+        let output = '';
+        const lines = data.toString().split('\n');
+        for (let i = 0; i < lines.length; i += 1) {
+          if (lines[i]) {
+            length += 1;
+            const field = lines[i].toString().split(',');
+            if (Object.prototype.hasOwnProperty.call(students, field[3])) {
+              students[field[3]].push(field[0]);
+            } else {
+              students[field[3]] = [field[0]];
+            }
+            if (Object.prototype.hasOwnProperty.call(fields, field[3])) {
+              fields[field[3]] += 1;
+            } else {
+              fields[field[3]] = 1;
+            }
+          }
+        }
+        const totalStudents = length - 1;
+        output += `Number of students: ${totalStudents}\n`;
+        for (const [key, value] of Object.entries(fields)) {
+          if (key !== 'field') {
+            output += `Number of students in ${key}: ${value}. `;
+            output += `List: ${students[key].join(', ')}\n`;
+          }
+        }
+        resolve(output);
       }
-    }
-
-    console.log(`Number of students: ${lines.length - 1}`); // Exclude the header line
-    for (const field in students) {
-      console.log(`Number of students in ${field}: ${students[field].count}. List: ${students[field].list.join(', ')}`);
-    }
-    console.log('Done!');
-  } catch (error) {
-    throw new Error('Cannot load the database');
-  }
+    });
+  });
 }
 
-const app = http.createServer((req, res) => {
+const server = http.createServer((req, res) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
-
   if (req.url === '/') {
     res.write('Hello Holberton School!');
     res.end();
   }
-
   if (req.url === '/students') {
     res.write('This is the list of our students\n');
     countStudents(process.argv[2].toString()).then((output) => {
       const outString = output.slice(0, -1);
       res.end(outString);
-    }).catch(() => {
-      res.statusCode = 404;
-      res.end('Cannot load the database');
+    }).catch((error) => {
+      res.statusCode = 500; // Internal Server Error
+      res.end(`Error: ${error.message}`);
     });
   }
 });
 
-app.listen(port, host, () => {});
+server.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
 
-module.exports = app;
+module.exports = server;
