@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 
-function countStudents(path) {
+function countStudents (path) {
   try {
     console.log('After!');
     const data = fs.readFileSync(path, 'utf-8');
@@ -16,13 +16,13 @@ function countStudents(path) {
     for (const line of lines.slice(1)) {
       const [firstName, , , field] = line.split(',').map((field) => field.trim());
 
-      if (field in students) {
+      if (Object.prototype.hasOwnProperty.call(students, field)) {
         students[field].count += 1;
         students[field].list.push(firstName);
       } else {
         students[field] = {
           count: 1,
-          list: [firstName],
+          list: [firstName]
         };
       }
     }

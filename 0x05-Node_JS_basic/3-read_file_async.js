@@ -13,10 +13,10 @@ async function countStudents (path) {
 
     const students = {};
     for (const line of lines.slice(1)) { // Skip the header line
-      const [firstName, lastName, age, field] = line.split(',').map(field => field.trim());
+      const [firstName, , , field] = line.split(',').map((field) => field.trim());
 
       if (field in students) {
-        students[field].count++;
+        students[field].count += 1;
         students[field].list.push(firstName);
       } else {
         students[field] = {
@@ -27,9 +27,13 @@ async function countStudents (path) {
     }
 
     console.log(`Number of students: ${lines.length - 1}`); // Exclude the header line
-    for (const field in students) {
-      console.log(`Number of students in ${field}: ${students[field].count}. List: ${students[field].list.join(', ')}`);
+    for (const field of Object.keys(students)) {
+      if (students.hasOwnProperty(field)) {
+        console.log(`Number of students in ${field}: ${students[field].count}. List: ${students[field].list.join(', ')}`);
+      }
     }
+
+    console.log('Done!');
   } catch (error) {
     throw new Error('Cannot load the database');
   }
