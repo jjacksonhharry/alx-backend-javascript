@@ -5,7 +5,7 @@ const fs = require('fs').promises;
 const { URL } = require('url');
 
 // Function to count students as defined in 3-read_file_async.js
-async function countStudents (path) {
+async function countStudents(path) {
   try {
     const data = await fs.readFile(path, 'utf-8');
     const lines = data.split('\n');
